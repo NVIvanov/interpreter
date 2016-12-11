@@ -23,8 +23,18 @@ class LanguageFunction {
         }
     }
 
+    /**
+     * Вызов функции с указанными параметрами. Переменные, значения которых используются в качестве аргументов,
+     * будут скопированы. Модификатор константы не будет распространяться на новые локальные переменные
+     * @param vars список параметров
+     */
     void invoke(Variable... vars){
+        if (vars.length != arguments.size())
+            throw new IllegalArgumentException()
         scope = new Scope(Scope.global)
-        scope.addVariables(vars)
+        Variable[] args = new Variable[vars.length]
+        for (int i = 0; i < vars.size(); i++)
+            args[i] = new Variable(arguments.get(i).name, arguments.get(i).type, vars[i].value, false)
+        scope.addVariables(args)
     }
 }

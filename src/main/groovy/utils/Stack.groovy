@@ -5,17 +5,30 @@ package utils
  * on 06.12.16.
  */
 class Stack {
-    private Stack instance
+    static private Stack instance
     private final Map<LanguageFunction, Object> functionDefinitions = new HashMap<>()
     private final Deque<LanguageFunction> current = new ArrayDeque<>()
 
+    private Stack(){}
+
+    /**
+     * Проверяет существование функции с указанным именем
+     * @param name имя функции
+     * @return true, если функция существует.
+     */
     boolean functionWithSuchNameExists(name){
         functionDefinitions.entrySet().stream().filter{ entry ->
             (entry.getKey().name == name)
         }.findAny().isPresent()
     }
 
-    boolean functionWithSuchArgumentsExists(name, List<Class> types){
+    /**
+     * Проверяет существование функции с указанными именем и набором аргументов
+     * @param name имя функции
+     * @param types список аргументов
+     * @return найденную функцию
+     */
+    Optional<LanguageFunction> functionWithSuchArgumentsExists(name, List<Class> types){
         functionDefinitions.entrySet().stream().filter{ entry ->
             (entry.getKey().name == name)
         }.filter{ entry ->
@@ -25,7 +38,7 @@ class Stack {
             for (int i = 0; i <= function.arguments.size(); i++)
                 if (function.arguments.get(i).getClass() != types.get(i))
                     return false
-        }.findAny().isPresent()
+        }.map{entry -> entry.getKey()}.findAny()
     }
 
     LanguageFunction currentFunction(){
@@ -40,7 +53,7 @@ class Stack {
         current.addLast(function)
     }
 
-    Stack getInstance(){
+    static Stack getInstance(){
         if (instance == null)
             instance = new Stack()
         return instance
