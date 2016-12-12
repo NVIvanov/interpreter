@@ -1,2 +1,12 @@
-int a = 2;
-bool b = a GT 1 == true;
+int b = 44;
+intarray a = [2, 3, 4, b * 2];
+int c = a[3];
+while (b GT 20) {
+    c = c - a[1];
+    DEC b;
+    a[3] = a[3] - 1;
+    int f = 1;
+}
+
+int2array aa=[[2,3],[4,5,6]];
+int d = SIZE1 a;

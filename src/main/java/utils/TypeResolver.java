@@ -46,6 +46,13 @@ public class TypeResolver {
         return Integer.class;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static Class resolveArrayType(String type){
+        if (type.equals("boolarray") || type.equals("bool2array"))
+            return Boolean.class;
+        return Integer.class;
+    }
+
     public static boolean isImmutable(String name){
         return "cint".equals(name) || "cbool".equals(name);
     }

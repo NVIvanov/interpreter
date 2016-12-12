@@ -14,7 +14,7 @@ public class Scope {
     private Scope parent;
     private Set<Variable> variableSet = new HashSet<>();
 
-    Scope(Scope parent){
+    public Scope(Scope parent){
         this.parent = parent;
     }
 
@@ -58,4 +58,9 @@ public class Scope {
                 .append(variable.getValue()).append("-").append(variable.getImmutable()).append("\r\n"));
         return builder.insert(0, parent).toString();
     }
+
+    public Scope getParent() {
+        return parent;
+    }
+
 }

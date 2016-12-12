@@ -11,14 +11,14 @@ sentense: whileCycle
     | doubleArrayDeclaration SEMI
     | arrayExtend SEMI
     | doubleArrayExtend SEMI
-    | arraySize SEMI
-    | doubleArraySize SEMI
     | assignment SEMI
     | functionCall SEMI
     | '{' (sentense)+ '}'
     | expr SEMI;
 expr: increment #IncrementLabel
     | decrement #DecrementLabel
+    | arraySize #arraySizeLabel
+    | doubleArraySize #doubleArraySizeLabel
     | 'NOT' expr #Negation
     | '(' expr ')' #Priotiry
     | expr op=('*'|'/') expr #Multiplying
@@ -32,7 +32,8 @@ value: literal
     | identifier 
     | arrayValue
     | doubleArrayValue;
-assignment: identifier  '=' expr;
+assignment: identifier '=' expr
+    | arrayValue '=' expr;
 whileCycle: 'while' '('expr ')' sentense;
 ifExpr: 'if' '(' expr ')' sentense 'else' sentense
     | 'if' '(' expr ')' sentense;
@@ -42,15 +43,15 @@ functionDeclaration: returnValues 'function' identifier  '(' arguments ')''{'  s
 functionCall: identifier  '=' identifier  '(' (expr?(','expr?)*)? ')'
     | '[' identifier (','identifier ?)*']' '=' identifier  '(' (expr?(','expr?)*)? ')';
 arrayValue: identifier  '[' expr ']';
-arrayDeclaration: ('intarray'|'boolarray') identifier  '=' arrayInit;
+arrayDeclaration: ('intarray'|'boolarray') identifier '=' arrayInit;
 arrayInit: '[' (expr (',' expr)*)? ']';
 doubleArrayValue: identifier  '[' expr ',' expr ']';
 doubleArrayDeclaration: ('int2array'|'bool2array') identifier  '=' doubleArrayInit;
-doubleArrayInit: '[' ('[' expr (',' expr)* ']' (',' '[' expr (',' expr)* ']' )*)? ']';
-arrayExtend: 'EXTEND1' identifier  INT;
-doubleArrayExtend: 'EXTEND2' identifier  INT INT;
+doubleArrayInit: '[' ( arrayInit (',' arrayInit )*)? ']';
+arrayExtend: 'EXTEND1' identifier INT;
+doubleArrayExtend: 'EXTEND2' identifier INT INT;
 arraySize: 'SIZE1' identifier ;
-doubleArraySize: 'SIZE2' identifier  INT;
+doubleArraySize: 'SIZE2' identifier INT;
 increment: 'INC' identifier ;
 decrement: 'DEC' identifier ;
 returnValues: '[' (returnValue(','returnValue)*)+ ']'
