@@ -1,3 +1,2 @@
-int a = 5;
-
-if (a LT 10){ a = 15; b=25;}
+int a = 2;
+bool b = a GT 1 == true;

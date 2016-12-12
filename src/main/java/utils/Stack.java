@@ -1,14 +1,16 @@
 package utils;
 
+import generated.RobotParser;
+
 import java.util.*;
 
 /**
  * @author nivanov
  * on 06.12.16.
  */
-class Stack {
+public class Stack {
     static private Stack instance;
-    private final Map<LanguageFunction, Object> functionDefinitions = new HashMap<>();
+    private final Map<LanguageFunction, RobotParser.SentenseContext> functionDefinitions = new HashMap<>();
     private final Deque<LanguageFunction> current = new ArrayDeque<>();
 
     private Stack(){}
@@ -59,7 +61,7 @@ class Stack {
         return instance;
     }
 
-    void createDefinition(LanguageFunction function,Object node){
+    void createDefinition(LanguageFunction function, RobotParser.SentenseContext node){
         functionDefinitions.put(function, node);
     }
 }

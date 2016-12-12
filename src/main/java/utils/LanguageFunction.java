@@ -7,7 +7,7 @@ import java.util.List;
  * @author nivanov
  * on 06.12.16.
  */
-class LanguageFunction {
+public class LanguageFunction {
     private String name;
     private Integer currentLine = 0;
     private List<FunctionArgument> arguments = new ArrayList<>();
@@ -18,7 +18,7 @@ class LanguageFunction {
      * @param name имя функции
      * @param args список аргументов
      */
-    LanguageFunction(String name, List<FunctionArgument> args){
+    public LanguageFunction(String name, List<FunctionArgument> args){
         this.name = name;
         args.forEach( argument -> {
             if (!arguments.contains(argument))
@@ -37,7 +37,7 @@ class LanguageFunction {
         scope = new Scope(Scope.global);
         Variable[] args = new Variable[vars.length];
         for (int i = 0; i < vars.length; i++)
-            args[i] = new Variable(arguments.get(i).getName(), arguments.get(i).getType(), vars[i].value, false);
+            args[i] = new Variable(arguments.get(i).getName(), arguments.get(i).getType(), vars[i].getValue(), false);
         scope.addVariables(args);
     }
 

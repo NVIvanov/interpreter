@@ -4,11 +4,11 @@ package utils;
  * @author nivanov
  * on 08.12.16.
  */
-class FunctionArgument {
+public class FunctionArgument {
     private String name;
     private Class type;
 
-    FunctionArgument(String name, Class type){
+    public FunctionArgument(String name, Class type){
         this.name = name;
         this.type = type;
     }
@@ -28,11 +28,11 @@ class FunctionArgument {
         return name.hashCode();
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    Class getType() {
+    public Class getType() {
         return type;
     }
 }
