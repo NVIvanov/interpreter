@@ -5,8 +5,8 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'groovy'
 apply plugin: 'idea'
+apply plugin: 'antlr'
 
 jar {
     baseName = 'interpreter'
@@ -15,18 +15,36 @@ jar {
 
 sourceSets {
     main {
-        groovy {
-            srcDir 'src/main/groovy'
+        java {
+            srcDirs 'src/main/java', 'src/main/antlr'
         }
+        antlr {
+            srcDir 'src/main/resources'
+        }
+        compileClasspath
     }
 }
+
+generateGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ["-visitor", "-long-messages"]
+}
+
+generateGrammarSource << {
+    println "Copying generated grammar lexer/parser files to main directory."
+    copy {
+        from "${buildDir}/generated-src/antlr/resources"
+        into "src/main/antlr/generated"
+    }
+}
+
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.5'
+    antlr "org.antlr:antlr4:4.5"
 }
 
 sourceCompatibility = 1.8

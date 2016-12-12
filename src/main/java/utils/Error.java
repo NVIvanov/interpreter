@@ -1,16 +1,16 @@
-package utils
+package utils;
 
 /**
  * @author nivanov
  * on 08.12.16.
  */
 class Error {
-    String message
-    Type type
+    private String message;
+    private Type type;
 
-    Error(type, message){
-        this.type = type
-        this.message = message
+    Error(Type type, String message){
+        this.type = type;
+        this.message = message;
     }
 
     enum Type{
