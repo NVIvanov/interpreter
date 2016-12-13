@@ -4,12 +4,15 @@ package utils;
  * @author nivanov
  * on 08.12.16.
  */
-public class Variable extends FunctionArgument{
-    private Object value;
+public class Variable{
+    protected Object value;
+    private String name;
+    private Class type;
     private Boolean immutable;
 
     public Variable(String name,Class type,Object value,Boolean immutable) {
-        super(name, type);
+        this.name = name;
+        this.type = type;
         this.value = value;
         this.immutable = immutable;
     }
@@ -24,5 +27,18 @@ public class Variable extends FunctionArgument{
 
     public Boolean getImmutable() {
         return immutable;
+    }
+
+    public Class getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }
