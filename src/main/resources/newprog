@@ -1,0 +1,3 @@
+bool b = PUSHR();
+b = UNDO();
+b = RIGHT();

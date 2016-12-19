@@ -18,10 +18,10 @@ public class DoubleArrayVariable extends ArrayVariable {
 
     public Object getValue(int index1, int index2){
         if (index1 < 0 || index1 >= getValue().size())
-            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "ARRAY INDEX OUT OF BOUNDS");
+            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
         List list = getValue().get(index1);
         if (index2 < 0 || index2 >= list.size())
-            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "ARRAY INDEX OUT OF BOUNDS");
+            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
         return getValue().get(index1).get(index2);
     }
 

@@ -18,12 +18,12 @@ public class TypeResolver {
                 Boolean val = "true".equals(stringValue) ? Boolean.TRUE :
                         ("false".equals(stringValue) ? Boolean.FALSE : null);
                 if (val == null)
-                    throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE,
-                            "UNKNOWN TYPE");
+                    throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE
+                    );
                 return val;
             }
         }catch (Exception e){
-            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "UNKNOWN TYPE");
+            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
         }
         return null;
     }
@@ -34,7 +34,7 @@ public class TypeResolver {
         try {
             return Integer.valueOf(value);
         }catch (Exception e){
-            throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE, "UNKNOWN OPERAND TYPE");
+            throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE);
         }
     }
 
@@ -45,7 +45,7 @@ public class TypeResolver {
         try {
             Integer.valueOf(value);
         }catch (Exception e){
-            throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE, "UNKNOWN OPERAND TYPE");
+            throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE);
         }
         return Integer.class;
     }
@@ -58,7 +58,10 @@ public class TypeResolver {
     }
 
     public static Class resolveArrayTypeByValue(String value){
-        String values = value.split("\\[")[1].split("]")[0];
+        String[] tmp = value.split("\\[")[1].split("]");
+        if (tmp.length == 0)
+            return Integer.class;
+        String values = tmp[0];
         values = values.split(",")[0];
         try {
             Integer.valueOf(values);

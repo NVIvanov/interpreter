@@ -15,6 +15,19 @@ public class Stack {
         functionDefinitions.add(LanguageFunction.main);
         functionDefinitions.add(LanguageFunction.printInt);
         functionDefinitions.add(LanguageFunction.square);
+        functionDefinitions.add(LanguageFunction.forw);
+        functionDefinitions.add(LanguageFunction.back);
+        functionDefinitions.add(LanguageFunction.right);
+        functionDefinitions.add(LanguageFunction.left);
+        functionDefinitions.add(LanguageFunction.getb);
+        functionDefinitions.add(LanguageFunction.getr);
+        functionDefinitions.add(LanguageFunction.getl);
+        functionDefinitions.add(LanguageFunction.getf);
+        functionDefinitions.add(LanguageFunction.pushB);
+        functionDefinitions.add(LanguageFunction.pushF);
+        functionDefinitions.add(LanguageFunction.pushL);
+        functionDefinitions.add(LanguageFunction.pushR);
+        functionDefinitions.add(LanguageFunction.undo);
         current.addLast(LanguageFunction.main);
     }
 

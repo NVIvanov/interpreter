@@ -8,18 +8,12 @@ import java.io.PrintStream;
  */
 public class InterpreterException extends RuntimeException {
     private Type type;
-    private String message;
     private LanguageFunction function;
 
-    public InterpreterException(Type type, String message){
-        super(type.toString() + " - " + message);
+    public InterpreterException(Type type){
+        super(type.toString());
         this.type = type;
-        this.message = message;
         function = Stack.getInstance().currentFunction();
-    }
-
-    public String getErrorMessage() {
-        return this.message;
     }
 
     public Type getType() {
@@ -33,6 +27,6 @@ public class InterpreterException extends RuntimeException {
     }
 
     public enum Type{
-        UNEXPECTED_TOKEN, IDENTIFIER_NOT_FOUND, ILLEGAL_ARGUMENT_TYPE, ILLEGAL_OPERAND_TYPE, IDENTIFIER_ALREADY_EXISTS
+        ARRAY_OUT_OF_BOUND, UNEXPECTED_TOKEN, IDENTIFIER_NOT_FOUND, ILLEGAL_ARGUMENT_TYPE, ILLEGAL_OPERAND_TYPE, IDENTIFIER_ALREADY_EXISTS
     }
 }

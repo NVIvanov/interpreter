@@ -44,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    antlr "org.antlr:antlr4:4.5"
+    antlr "org.antlr:antlr4:4.6"
 }
 
 sourceCompatibility = 1.8

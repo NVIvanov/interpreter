@@ -1,7 +1,26 @@
-int a = 0;
-int b = a;
-int c = 2;
-int d = 5;
-int e = 67;
-int t = 13;
-int a1 = a2;
+intarray a = [243, 4,34,5, 43,5, 34, 54, 24, 3, 54, 2, 64, 6, 2,4];
+
+function quickSort(start = 0, end = 0, a = []){
+    if ((end - start) GT 1){
+        int i = start;
+        int j = end;
+        int cur = j - (j-i)/2;
+        while(i LT j){
+            while(i LT cur AND (a[i] LT a[cur] OR a[i] == a[cur]))
+                INC i;
+            while(j GT cur AND (a[cur] LT a[j] OR a[cur] == a[j]))
+                DEC j;
+            if (i LT j){
+                int tmp = a[i];
+                a[i] = a[j];
+                a[j] = tmp;
+                if (i == cur)
+                    cur = j;
+                else if (j == cur)
+                    cur = i;
+            }
+        }
+        quickSort(start, cur, a);
+        quickSort(cur + 1, end, a);
+    }
+}

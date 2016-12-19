@@ -13,7 +13,7 @@ public class ArrayVariable extends Variable {
 
     public Object getValue(int index) {
         if (index < 0 || index >= getValue().size())
-            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "ARRAY INDEX OUT OF BOUNDS");
+            throw new InterpreterException(InterpreterException.Type.ARRAY_OUT_OF_BOUND);
         return getValue().get(index);
     }
 

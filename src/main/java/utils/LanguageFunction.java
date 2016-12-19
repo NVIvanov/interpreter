@@ -2,6 +2,8 @@ package utils;
 
 import generated.RobotParser;
 import intr.MyVisitor;
+import robot.Robot;
+import robot.commands.impl.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,13 +28,79 @@ public class LanguageFunction {
                 result.setValue(value * value);
             }), null);
 
+    static LanguageFunction forw = new LanguageFunction("FORW",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new MoveUpCommand()))), null);
+
+    static LanguageFunction back = new LanguageFunction("BACK",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new MoveDownCommand()))), null);
+
+    static LanguageFunction right = new LanguageFunction("RIGHT",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new MoveRightCommand()))), null);
+
+    static LanguageFunction left = new LanguageFunction("LEFT",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new MoveLeftCommand()))), null);
+
+    static LanguageFunction getf = new LanguageFunction("GETF",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Integer.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().getF())), null);
+
+    static LanguageFunction getb = new LanguageFunction("GETB",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Integer.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().getB())), null);
+
+    static LanguageFunction getr = new LanguageFunction("GETR",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Integer.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().getR())), null);
+
+    static LanguageFunction getl = new LanguageFunction("GETL",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Integer.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().getL())), null);
+
+    static LanguageFunction pushF = new LanguageFunction("PUSHF",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new PushForwardCommand()))), null);
+
+    static LanguageFunction pushB = new LanguageFunction("PUSHB",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new PushBackCommand()))), null);
+
+    static LanguageFunction pushR = new LanguageFunction("PUSHR",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new PushRightCommand()))), null);
+
+    static LanguageFunction pushL = new LanguageFunction("PUSHL",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().performCommand(new PushLeftCommand()))), null);
+
+    static LanguageFunction undo = new LanguageFunction("UNDO",
+            Collections.emptyList(),
+            Collections.singletonList(new FunctionArgument("result", Boolean.class, false)),
+            (function -> function.scope.getVariable("result").get().setValue(Robot.getInstance().undoLastCommand())), null);
+
+
     private String name;
     private Integer currentLine = 0;
     private List<FunctionArgument> arguments = new ArrayList<>();
     private List<FunctionArgument> returnValues = new ArrayList<>();
     private Scope scope;
     private Consumer<LanguageFunction> doInCode;
-    private RobotParser.SentenseContext context;
+    private List<RobotParser.SentenseContext> context;
 
     /**
      * Создает функцию с именем, указанием имени и набора аргументов. Аргумент с повторяющимся именем добавлен не будет.
@@ -40,25 +108,25 @@ public class LanguageFunction {
      * @param args список аргументов
      */
     public LanguageFunction(String name, List<FunctionArgument> args, List<FunctionArgument> returnValues,
-                            RobotParser.SentenseContext context){
+                            List<RobotParser.SentenseContext> context){
         this.name = name;
         this.context = context;
         args.forEach( argument -> {
             if (!arguments.contains(argument))
                 arguments.add(argument);
             else
-                throw new InterpreterException(InterpreterException.Type.IDENTIFIER_ALREADY_EXISTS, "arg already exists");
+                throw new InterpreterException(InterpreterException.Type.IDENTIFIER_ALREADY_EXISTS);
         });
         returnValues.forEach( argument -> {
             if (!this.returnValues.contains(argument) && !arguments.contains(argument))
                 this.returnValues.add(argument);
             else
-                throw new InterpreterException(InterpreterException.Type.IDENTIFIER_ALREADY_EXISTS, "return value already exist");
+                throw new InterpreterException(InterpreterException.Type.IDENTIFIER_ALREADY_EXISTS);
         });
     }
 
-    public LanguageFunction(String name, List<FunctionArgument> arguments, List<FunctionArgument> returnValues,
-                            Consumer<LanguageFunction> doInCode,  RobotParser.SentenseContext context){
+    private LanguageFunction(String name, List<FunctionArgument> arguments, List<FunctionArgument> returnValues,
+                             Consumer<LanguageFunction> doInCode, List<RobotParser.SentenseContext> context){
         this(name, arguments, returnValues, context);
         this.doInCode = doInCode;
     }
@@ -71,7 +139,7 @@ public class LanguageFunction {
      */
     public void invoke(MyVisitor visitor, List<Variable> variables, List<Variable> outVariables){
         if (variables.size() != arguments.size() && outVariables.size() != returnValues.size())
-            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "check args and outs sizes");
+            throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
         Variable[] args = new Variable[variables.size()];
         for (int i = 0; i < variables.size(); i++){
             FunctionArgument currArg = arguments.get(i);
@@ -80,7 +148,7 @@ public class LanguageFunction {
                 if (currVar.getType() == currArg.getType())
                     createVariable(args, i, currArg, currVar);
                 else
-                    throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "types of args must equal");
+                    throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
             }else
                 args[i] = new Variable(currArg.getName(), currArg.getType(),
                         currArg.getDefaultValue(), false);
@@ -95,16 +163,20 @@ public class LanguageFunction {
                     createReturnValue(returnVals, i, currArg, currVar);
                 }
                 else
-                    throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "types of args must equal");
+                    throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
             }
             else{
-                returnVals[i] = new Variable(currArg.getName(), currArg.getType(), currArg.getDefaultValue(), false);
+                if (currArg instanceof ArrayFunctionArgument)
+                    returnVals[i] = new ArrayVariable(currArg.getName(), currArg.getType(), (List) currArg.getDefaultValue(), false);
+                else
+                    returnVals[i] = new Variable(currArg.getName(), currArg.getType(), currArg.getDefaultValue(), false);
             }
         }
         scope.addVariables(args);
         scope.addVariables(returnVals);
-        if (context != null)
-            visitor.visit(context);
+        if (context != null){
+            context.forEach(visitor::visit);
+        }
         if (doInCode != null)
             doInCode.accept(this);
         for (int i = 0; i < returnVals.length; i++){
@@ -119,7 +191,7 @@ public class LanguageFunction {
 
         }else{
             if (currVar instanceof ArrayVariable || currArg instanceof ArrayFunctionArgument)
-                throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "types of args must equal");
+                throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
 
             else
                 returnVals[i] = new Variable(currArg.getName(), currArg.getType(), currArg.getDefaultValue(), false);
@@ -132,7 +204,7 @@ public class LanguageFunction {
 
         }else{
             if (currVar instanceof ArrayVariable || currArg instanceof ArrayFunctionArgument)
-                throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE, "types of args must equal");
+                throw new InterpreterException(InterpreterException.Type.ILLEGAL_ARGUMENT_TYPE);
 
             else
                 returnVals[i] = new Variable(currArg.getName(), currArg.getType(), currVar.getValue(), false);

@@ -3,7 +3,9 @@ grammar Robot;
     package generated;
 }
 main: (sentense | functionDeclaration)*;
-sentense: sentense sentense
+sentense: comment
+    | breakpoint
+    | '{' (sentense)+ '}'
     | whileCycle
     | ifExpr
     | variableDeclaration SEMI
@@ -14,12 +16,14 @@ sentense: sentense sentense
     | doubleArrayExtend SEMI
     | assignment SEMI
     | functionCall SEMI
-    | '{' (sentense)+ '}'
     | expr SEMI;
+comment: '/*' sentense* '*/';
+breakpoint: 'bp';
 expr: increment #IncrementLabel
     | decrement #DecrementLabel
     | arraySize #arraySizeLabel
     | doubleArraySize #doubleArraySizeLabel
+    | oneReturnValueFunctionCall #OneReturnFunction
     | 'NOT' expr #Negation
     | '(' expr ')' #Priotiry
     | expr op=('*'|'/') expr #Multiplying
@@ -39,12 +43,12 @@ assignment: identifier '=' expr
 whileCycle: 'while' '('expr ')' sentense;
 ifExpr: 'if' '(' expr ')' sentense 'else' sentense
     | 'if' '(' expr ')' sentense;
-variableDeclaration: ('int' | 'bool') identifier  '=' expr;
+variableDeclaration: ('int' | 'bool') identifier '=' expr;
 constVariableDeclaration: ('cint' | 'cbool') identifier  '=' expr;
-functionDeclaration: returnValues 'function' identifier  '(' arguments ')''{'  sentense '}';
+functionDeclaration: returnValues 'function' identifier  '(' arguments ')''{'  sentense* '}';
 functionCall: identifier '(' (expr?(','expr?)*)? ')' #Procedure
-    | identifier  '=' identifier  '(' (expr?(','expr?)*)? ')' #OneReturnFunction
     | '[' identifier (','identifier ?)*']' '=' identifier  '(' (expr?(','expr?)*)? ')' #SeveralReturnFunction;
+oneReturnValueFunctionCall: identifier '(' (expr?(','expr?)*)? ')';
 arrayValue: identifier  '[' expr ']';
 arrayDeclaration: ('intarray'|'boolarray') identifier '=' arrayInit;
 arrayInit: '[' (expr (',' expr)*)? ']';
@@ -61,7 +65,7 @@ increment: 'INC' identifier
 decrement: 'DEC' identifier
     | 'DEC' arrayValue
     | 'DEC' doubleArrayValue;
-returnValues: '[' (returnValue(','returnValue)*)+ ']'
+returnValues: ('[' (returnValue(','returnValue)*)+ ']')?
     | returnValue;
 returnValue: identifier '=' literal
     | identifier '=' arrayLiteral;
