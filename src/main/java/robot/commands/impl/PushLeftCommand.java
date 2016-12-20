@@ -15,6 +15,6 @@ public class PushLeftCommand implements RobotCommand {
 
     @Override
     public boolean undo(Robot robot) {
-        return robot.pushR();
+        return robot.grabR();
     }
 }

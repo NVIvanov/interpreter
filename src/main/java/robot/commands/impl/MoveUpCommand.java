@@ -15,6 +15,11 @@ public class MoveUpCommand implements RobotCommand {
 
     @Override
     public boolean undo(Robot robot) {
-        return robot.back();
+        boolean result = robot.back();
+        if (result){
+            robot.rotateLeft();
+            robot.rotateLeft();
+        }
+        return result;
     }
 }

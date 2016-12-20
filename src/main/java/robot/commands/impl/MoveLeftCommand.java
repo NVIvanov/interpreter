@@ -10,11 +10,14 @@ import robot.commands.RobotCommand;
 public class MoveLeftCommand implements RobotCommand {
     @Override
     public boolean perform(Robot robot) {
-        return false;
+        return robot.left();
     }
 
     @Override
     public boolean undo(Robot robot) {
-        return false;
+        boolean result = robot.back();
+        if (result)
+            robot.rotateLeft();
+        return result;
     }
 }

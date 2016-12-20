@@ -1,3 +1,16 @@
-bool b = PUSHR();
-b = UNDO();
-b = RIGHT();
+ret = false function isCrossroad(){
+    int counter = 0;
+    if (LEFT()){
+        ret = UNDO();
+        INC counter;
+    }
+    if (RIGHT()){
+        ret = UNDO();
+        INC counter;
+    }
+    if (FORW()){
+        ret = UNDO();
+        INC counter;
+    }
+    ret = counter GT 0;
+}

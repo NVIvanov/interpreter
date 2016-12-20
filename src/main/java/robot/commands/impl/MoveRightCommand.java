@@ -15,6 +15,9 @@ public class MoveRightCommand implements RobotCommand {
 
     @Override
     public boolean undo(Robot robot) {
-        return robot.left();
+        boolean result = robot.back();
+        if (result)
+            robot.rotateRight();
+        return result;
     }
 }

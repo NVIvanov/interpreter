@@ -43,4 +43,9 @@ public class Point {
     public int hashCode() {
         return (x + "" + y).hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }

@@ -2,10 +2,7 @@ package robot;
 
 import robot.commands.RobotCommand;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Map;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static robot.Maze.ExitDirection.*;
@@ -21,6 +18,7 @@ public class Robot {
     private int x, y;
     private final Maze maze;
     private Deque<RobotCommand> commandStack = new ArrayDeque<>();
+    private Direction direction = Direction.UP;
 
     private Robot(int x, int y, Maze maze) {
         this.x = x;
@@ -29,55 +27,163 @@ public class Robot {
     }
 
     public boolean forward(){
-        if (maze.canMove(x, y, x, y + 1)){
-            setCoordinates(x, ++y);
+        int nextX = computeNextX(direction), nextY = computeNextY(direction);
+        if (maze.canMove(x, y, nextX, nextY)){
+            setCoordinates(nextX, nextY);
             return true;
         }
         return false;
+    }
+
+    private int computeNextX(Direction direction){
+        switch (direction){
+            case RIGHT:
+                return x + 1;
+            case LEFT:
+                return x - 1;
+            default:
+                return x;
+        }
+    }
+
+    private int computeNextY(Direction direction){
+        switch (direction){
+            case DOWN:
+                return y - 1;
+            case UP:
+                return y + 1;
+            default:
+                return y;
+        }
     }
 
     public boolean back(){
-        if (maze.canMove(x, y, x, y - 1)){
-            setCoordinates(x, --y);
-            return true;
+        rotateLeft();
+        rotateLeft();
+        boolean result = forward();
+        if (!result){
+            rotateLeft();
+            rotateLeft();
         }
-        return false;
+        return result;
     }
 
     public boolean right(){
-        if (maze.canMove(x, y, x + 1, y)){
-            setCoordinates(++x, y);
-            return true;
-        }
-        return false;
+        rotateRight();
+        boolean result = forward();
+        if (!result)
+            rotateLeft();
+        return result;
     }
 
     public boolean left(){
-        if (maze.canMove(x, y, x - 1, y)){
-            setCoordinates(--x, y);
-            return true;
-        }
-        return false;
+        rotateLeft();
+        boolean result = forward();
+        if (!result)
+            rotateRight();
+        return result;
+    }
+
+    public void rotateLeft(){
+        direction = direction.rotateLeft();
+        LOG.info(String.format("rotating. direction %s", direction));
+    }
+
+    public void rotateRight(){
+        direction = direction.rotateRight();
+        LOG.info(String.format("rotating. direction %s", direction));
     }
 
     public boolean pushF(){
-        maze.moveBlockUp(x, y, x, y+1);
-        return forward();
+        Direction tmp = direction;
+        direction = Direction.UP;
+        boolean result = maze.moveBlockUp(x, y, computeNextX(direction), computeNextY(direction));
+        if (result)
+            return forward();
+        else
+            direction = tmp;
+        return false;
     }
 
     public boolean pushL(){
-        maze.moveBlockLeft(x, y, x-1, y);
-        return left();
+        Direction tmp = direction;
+        direction = Direction.LEFT;
+        boolean result = maze.moveBlockLeft(x, y, computeNextX(direction), computeNextY(direction));
+        if (result)
+            return forward();
+        else
+            direction = tmp;
+        return false;
     }
 
     public boolean pushB(){
-        maze.moveBlockDown(x, y, x, y - 1);
-        return back();
+        Direction tmp = direction;
+        direction = Direction.DOWN;
+        boolean result = maze.moveBlockDown(x, y, computeNextX(direction), computeNextY(direction));
+        if (result)
+            return forward();
+        else
+            direction = tmp;
+        return false;
     }
 
     public boolean pushR(){
-        maze.moveBlockRight(x, y, x + 1, y);
-        return right();
+        Direction tmp = direction;
+        direction = Direction.RIGHT;
+        boolean result = maze.moveBlockRight(x, y, computeNextX(direction), computeNextY(direction));
+        if (result)
+            return forward();
+        else
+            direction = tmp;
+        return false;
+    }
+
+    public boolean grabF(){
+        int x = this.x, y = this.y;
+        Direction tmp = direction;
+        direction = Direction.UP;
+        boolean result = forward();
+        if (result)
+            maze.moveBlockUp(x, y, x, y - 1);
+        else
+            direction = tmp;
+        return result;
+    }
+
+    public boolean grabL(){
+        int x = this.x, y = this.y;
+        Direction tmp = direction;
+        direction = Direction.LEFT;
+        boolean result = forward();
+        if (result)
+            maze.moveBlockLeft(x, y, x + 1, y);
+        else
+            direction = tmp;
+        return result;
+    }
+
+    public boolean grabB(){
+        int x = this.x, y = this.y;
+        Direction tmp = direction;
+        direction = Direction.DOWN;
+        boolean result = forward();
+        if (result)
+            maze.moveBlockDown(x, y, x, y + 1);
+        else
+            direction = tmp;
+        return result;
+    }
+
+    public boolean grabR(){
+        int x = this.x, y = this.y;
+        Direction tmp = direction;
+        direction = Direction.RIGHT;
+        boolean result = forward();
+        if (result)
+            maze.moveBlockRight(x, y, x - 1, y);
+        else
+            direction = tmp;
+        return result;
     }
 
     public Integer getF(){
@@ -126,6 +232,31 @@ public class Robot {
     private void setCoordinates(int x, int y){
         this.x = x;
         this.y = y;
-        LOG.info(String.format("robot was moved to (%d, %d)", x, y));
+        LOG.info(String.format("robot was moved to (%d, %d). direction is %s", x, y, direction));
+    }
+
+    private enum Direction{
+        UP, DOWN, LEFT, RIGHT;
+        private static Map<Direction, Direction> rightRotates = new HashMap<>();
+        private static Map<Direction, Direction> leftRotates = new HashMap<>();
+
+        static {
+            rightRotates.put(UP, RIGHT);
+            rightRotates.put(RIGHT, DOWN);
+            rightRotates.put(DOWN, LEFT);
+            rightRotates.put(LEFT, UP);
+            leftRotates.put(UP, LEFT);
+            leftRotates.put(LEFT, DOWN);
+            leftRotates.put(DOWN, RIGHT);
+            leftRotates.put(RIGHT, UP);
+        }
+
+        Direction rotateLeft(){
+            return leftRotates.get(this);
+        }
+
+        Direction rotateRight(){
+            return rightRotates.get(this);
+        }
     }
 }

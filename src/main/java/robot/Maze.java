@@ -40,11 +40,16 @@ class Maze {
         return x2 >= 0 && x2 < width && y2 >= 0 && y2 < height;
     }
 
+    private boolean noWallsBetween(Point p1, Point p2){
+        return obstacles.entrySet().stream().noneMatch(pointPointEntry ->
+            pointPointEntry.getKey().equals(p1) && pointPointEntry.getValue().equals(p2)
+            || pointPointEntry.getKey().equals(p2) && pointPointEntry.getValue().equals(p1));
+    }
+
     boolean moveBlockRight(int x1, int y1, int x2, int y2){
-        if (noBoards(x2, y2)){
+        if (noWallsBetween(new Point(x1 + 1, y1), new Point(x2 + 1, y2))){
             obstacles.entrySet().stream().filter(e ->
-                    e.getKey().getX() == x1 && e.getKey().getY() == y1 &&
-                            e.getValue().getX() == x2 && e.getValue().getY() == y2)
+                    hasWall(x1, y1, x2, y2, e))
                     .forEach(e -> {
                         e.getKey().setX(e.getKey().getX() + 1);
                         e.getValue().setX(e.getValue().getX() + 1);
@@ -54,10 +59,9 @@ class Maze {
     }
 
     boolean moveBlockLeft(int x1, int y1, int x2, int y2){
-        if (noBoards(x2, y2)){
+        if (noWallsBetween(new Point(x1 - 1, y1), new Point(x2 - 1, y2))){
             obstacles.entrySet().stream().filter(e ->
-                    e.getKey().getX() == x1 && e.getKey().getY() == y1 &&
-                            e.getValue().getX() == x2 && e.getValue().getY() == y2)
+                    hasWall(x1, y1, x2, y2, e))
                     .forEach(e -> {
                         e.getKey().setX(e.getKey().getX() - 1);
                         e.getValue().setX(e.getValue().getX() - 1);
@@ -67,10 +71,9 @@ class Maze {
     }
 
     boolean moveBlockUp(int x1, int y1, int x2, int y2){
-        if (noBoards(x2, y2)){
+        if (noWallsBetween(new Point(x1, y1 + 1), new Point(x2, y2 + 1))){
             obstacles.entrySet().stream().filter(e ->
-                    e.getKey().getX() == x1 && e.getKey().getY() == y1 &&
-                            e.getValue().getX() == x2 && e.getValue().getY() == y2)
+                    hasWall(x1, y1, x2, y2, e))
                     .forEach(e -> {
                         e.getKey().setY(e.getKey().getY() + 1);
                         e.getValue().setY(e.getValue().getY() + 1);
@@ -80,16 +83,22 @@ class Maze {
     }
 
     boolean moveBlockDown(int x1, int y1, int x2, int y2){
-        if (noBoards(x2, y2)){
+        if (noWallsBetween(new Point(x1, y1 - 1), new Point(x2, y2 - 1))){
             obstacles.entrySet().stream().filter(e ->
-                    e.getKey().getX() == x1 && e.getKey().getY() == y1 &&
-                            e.getValue().getX() == x2 && e.getValue().getY() == y2)
+                    hasWall(x1, y1, x2, y2, e))
                     .forEach(e -> {
                         e.getKey().setY(e.getKey().getY() - 1);
                         e.getValue().setY(e.getValue().getY() - 1);
                     });
             return true;
         }else return false;
+    }
+
+    private boolean hasWall(int x1, int y1, int x2, int y2, Map.Entry<Point, Point> e) {
+        return e.getKey().getX() == x1 && e.getKey().getY() == y1 &&
+                e.getValue().getX() == x2 && e.getValue().getY() == y2 ||
+                e.getValue().getX() == x1 && e.getValue().getY() == y1 &&
+                        e.getKey().getX() == x2 && e.getValue().getY() == y2;
     }
 
     void addExit(ExitDirection direction, Point exit){

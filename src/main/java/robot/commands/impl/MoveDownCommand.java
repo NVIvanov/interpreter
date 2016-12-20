@@ -15,6 +15,6 @@ public class MoveDownCommand implements RobotCommand {
 
     @Override
     public boolean undo(Robot robot) {
-        return robot.forward();
+        return robot.back();
     }
 }

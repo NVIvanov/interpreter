@@ -528,8 +528,8 @@ public class MyVisitor extends RobotBaseVisitor {
         Object value = visit(ctx.getChild(2));
         if (value instanceof List)
             throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE);
-        if (TypeResolver.resolveType((String) value).equals(Boolean.class)){
-            if (Boolean.valueOf((String) value)){
+        if (TypeResolver.resolveType(value.toString()).equals(Boolean.class)){
+            if (Boolean.valueOf(value.toString())){
                 this.scope = new Scope(this.scope);
                 Object res = visit(ctx.getChild(4));
                 this.scope = scope.getParent();
