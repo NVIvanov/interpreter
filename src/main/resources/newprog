@@ -1,16 +1,93 @@
 ret = false function isCrossroad(){
-    int counter = 0;
+    int count = 0;
     if (LEFT()){
         ret = UNDO();
-        INC counter;
+        INC count;
     }
     if (RIGHT()){
         ret = UNDO();
-        INC counter;
+        INC count;
     }
     if (FORW()){
         ret = UNDO();
+        INC count;
+    }
+    ret = count GT 1;
+}
+
+ret = false function hasLeftWall(){
+    bool b = LEFT();
+    if (b)
+        bool c = UNDO();
+    ret = NOT b;
+}
+
+ret = false function tupic(){
+    int count = 0;
+    if (LEFT()){
+        ret = UNDO();
+        INC count;
+    }
+    if (RIGHT()){
+        ret = UNDO();
+        INC count;
+    }
+    if (FORW()){
+        ret = UNDO();
+        INC count;
+    }
+    ret = count == 0;
+}
+
+ret = false function haveExit(){
+    int left = GETL();
+    int right = GETR();
+    int up = GETF();
+    int down = GETB();
+    ret = NOT ((left + right + up + down) == 400000);
+}
+
+ret = false function isExit(){
+    int left = GETL();
+    int right = GETR();
+    int up = GETF();
+    int down = GETB();
+    ret = left == 0 OR right == 0 OR up == 0 OR down == 0;
+}
+
+ret = false function needGoBack(lastX = 0, lastY = 0, x = 0, y = 0){
+    ret = (lastX == x AND lastY == y) OR tupic();
+}
+
+int counter = 0;
+
+if (NOT haveExit()){
+    printInt(999999);
+}else{
+    while (NOT isExit() AND counter LT 100000){
+        bool b = true;
+        bool exit = false;
+        while(NOT exit AND b AND hasLeftWall()){
+            if (FORW()){
+                INC counter;
+            }else
+                b = false;
+            exit = isExit();
+        }
+        if (NOT exit AND NOT tupic()){
+            b = LEFT();
+            if (NOT b){
+                b = FORW();
+                if (NOT b)
+                    b = RIGHT();
+            }
+            exit = isExit();
+        }else{
+            if (NOT exit)
+                b = BACK();
+        }
         INC counter;
     }
-    ret = counter GT 0;
+    printBool(isExit());
+    printInt(counter);
 }

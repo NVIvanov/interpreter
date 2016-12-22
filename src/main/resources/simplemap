@@ -1,0 +1,4 @@
+maze 2 2
+robot 0 0
+0 0 1 0
+exit RIGHT 1 0

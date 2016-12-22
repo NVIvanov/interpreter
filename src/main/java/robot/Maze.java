@@ -27,7 +27,9 @@ class Maze {
     boolean canMove(int x1, int y1, int x2, int y2){
         boolean hasObstacle = obstacles.entrySet().stream().anyMatch(e ->
                 e.getKey().getX() == x1 && e.getKey().getY() == y1 &&
-                        e.getValue().getX() == x2 && e.getValue().getY() == y2);
+                        e.getValue().getX() == x2 && e.getValue().getY() == y2 ||
+                        e.getValue().getX() == x1 && e.getValue().getY() == y1 &&
+                                e.getKey().getX() == x2 && e.getKey().getY() == y2);
         boolean noBoards = noBoards(x2, y2);
         return noBoards && !hasObstacle;
     }
@@ -108,6 +110,7 @@ class Maze {
     Map<ExitDirection, Integer> getExits(int x, int y){
         Point start = new Point(x, y);
         Map<Point, Integer> markedPoints = new HashMap<>();
+        markedPoints.put(start, 0);
         markNearest(start, 0, markedPoints);
         Map<ExitDirection, Integer> availableExits = new HashMap<>();
         markedPoints.forEach((point, integer) -> {

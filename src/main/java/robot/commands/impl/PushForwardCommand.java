@@ -7,14 +7,15 @@ import robot.commands.RobotCommand;
  * @author nivanov
  *         on 19.12.16.
  */
-public class PushForwardCommand implements RobotCommand {
+public class PushForwardCommand extends AbstractPushCommand {
+
     @Override
-    public boolean perform(Robot robot) {
+    public boolean performPush(Robot robot) {
         return robot.pushF();
     }
 
     @Override
-    public boolean undo(Robot robot) {
+    public boolean undoPush(Robot robot) {
         return robot.grabB();
     }
 }

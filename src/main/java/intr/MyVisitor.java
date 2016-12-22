@@ -239,9 +239,9 @@ public class MyVisitor extends RobotBaseVisitor {
     @Override
     public String visitAND(RobotParser.ANDContext ctx) {
         Object arg1 = visit(ctx.getChild(0)), arg2 = visit(ctx.getChild(2));
-        Class argType1 = TypeResolver.resolveType((String) arg1), argType2 = TypeResolver.resolveType((String) arg2);
+        Class argType1 = TypeResolver.resolveType(arg1.toString()), argType2 = TypeResolver.resolveType(arg2.toString());
         if (argType1.equals(Boolean.class) && argType1.equals(argType2))
-            return String.valueOf(Boolean.valueOf((String) arg1) && Boolean.valueOf((String) arg2));
+            return String.valueOf(Boolean.valueOf(arg1.toString()) && Boolean.valueOf(arg2.toString()));
         throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE);
     }
 
@@ -250,9 +250,9 @@ public class MyVisitor extends RobotBaseVisitor {
         Object arg1 = visit(ctx.getChild(0)), arg2 = visit(ctx.getChild(2));
         if (arg1 instanceof List || arg2 instanceof List)
             throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE);
-        Class argType1 = TypeResolver.resolveType((String) arg1), argType2 = TypeResolver.resolveType((String) arg2);
+        Class argType1 = TypeResolver.resolveType(arg1.toString()), argType2 = TypeResolver.resolveType(arg2.toString());
         if (argType1.equals(Boolean.class) && argType1.equals(argType2))
-            return String.valueOf(Boolean.valueOf((String) arg1) || Boolean.valueOf((String) arg2));
+            return String.valueOf(Boolean.valueOf(arg1.toString()) || Boolean.valueOf(arg2.toString()));
         throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE);
     }
 
@@ -266,8 +266,8 @@ public class MyVisitor extends RobotBaseVisitor {
         Object value = visit(ctx.getChild(2));
         if (value instanceof List)
             throw new InterpreterException(InterpreterException.Type.ILLEGAL_OPERAND_TYPE);
-        if (TypeResolver.resolveType((String) value).equals(Boolean.class)){
-            while (Boolean.valueOf((String) value)){
+        if (TypeResolver.resolveType(value.toString()).equals(Boolean.class)){
+            while (Boolean.valueOf(value.toString())){
                 this.scope = new Scope(this.scope);
                 visit(ctx.getChild(4));
                 this.scope = scope.getParent();

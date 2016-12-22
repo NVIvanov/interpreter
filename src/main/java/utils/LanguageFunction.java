@@ -19,6 +19,9 @@ public class LanguageFunction {
     static LanguageFunction printInt = new LanguageFunction("printInt",
             Collections.singletonList(new FunctionArgument("value", Integer.class, 0)) , Collections.emptyList(),
             (function) -> System.out.println(function.getScope().getVariable("value").get()), null);
+    static LanguageFunction printBool = new LanguageFunction("printBool",
+            Collections.singletonList(new FunctionArgument("value", Boolean.class, false)) , Collections.emptyList(),
+            (function) -> System.out.println(function.getScope().getVariable("value").get()), null);
     static LanguageFunction square = new LanguageFunction("sqr",
             Collections.singletonList(new FunctionArgument("value", Integer.class, 0)),
             Collections.singletonList(new FunctionArgument("result", Integer.class, 0)),
@@ -237,5 +240,16 @@ public class LanguageFunction {
 
     public List<FunctionArgument> getReturnValues() {
         return returnValues;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append("(");
+        arguments.forEach(functionArgument -> sb.append(functionArgument.getType().getSimpleName()).append(","));
+        if (sb.indexOf(",") != -1)
+            sb.deleteCharAt(sb.length() - 1);
+        sb.append(")");
+        return sb.toString();
     }
 }

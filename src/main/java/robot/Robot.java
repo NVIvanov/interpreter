@@ -12,7 +12,7 @@ import static robot.Maze.ExitDirection.*;
  *         on 17.12.16.
  */
 public class Robot {
-    private final static Integer DEFAULT_MAX_LENGTH = Integer.MAX_VALUE;
+    private final static Integer DEFAULT_MAX_LENGTH = 100000;
     private final static Logger LOG = Logger.getLogger(Robot.class.getName());
     private static Robot instance;
     private int x, y;
@@ -86,12 +86,12 @@ public class Robot {
 
     public void rotateLeft(){
         direction = direction.rotateLeft();
-        LOG.info(String.format("rotating. direction %s", direction));
+        //LOG.info(String.format("rotating. direction %s", direction));
     }
 
     public void rotateRight(){
         direction = direction.rotateRight();
-        LOG.info(String.format("rotating. direction %s", direction));
+        //LOG.info(String.format("rotating. direction %s", direction));
     }
 
     public boolean pushF(){
@@ -235,7 +235,7 @@ public class Robot {
         LOG.info(String.format("robot was moved to (%d, %d). direction is %s", x, y, direction));
     }
 
-    private enum Direction{
+    public enum Direction{
         UP, DOWN, LEFT, RIGHT;
         private static Map<Direction, Direction> rightRotates = new HashMap<>();
         private static Map<Direction, Direction> leftRotates = new HashMap<>();
@@ -258,5 +258,13 @@ public class Robot {
         Direction rotateRight(){
             return rightRotates.get(this);
         }
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }

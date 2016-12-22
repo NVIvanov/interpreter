@@ -2,6 +2,8 @@ package utils;
 
 import java.util.*;
 
+import static utils.LanguageFunction.*;
+
 /**
  * @author nivanov
  * on 06.12.16.
@@ -12,23 +14,24 @@ public class Stack {
     private final Deque<LanguageFunction> current = new ArrayDeque<>();
 
     private Stack(){
-        functionDefinitions.add(LanguageFunction.main);
-        functionDefinitions.add(LanguageFunction.printInt);
-        functionDefinitions.add(LanguageFunction.square);
-        functionDefinitions.add(LanguageFunction.forw);
-        functionDefinitions.add(LanguageFunction.back);
-        functionDefinitions.add(LanguageFunction.right);
-        functionDefinitions.add(LanguageFunction.left);
-        functionDefinitions.add(LanguageFunction.getb);
-        functionDefinitions.add(LanguageFunction.getr);
-        functionDefinitions.add(LanguageFunction.getl);
-        functionDefinitions.add(LanguageFunction.getf);
-        functionDefinitions.add(LanguageFunction.pushB);
-        functionDefinitions.add(LanguageFunction.pushF);
-        functionDefinitions.add(LanguageFunction.pushL);
-        functionDefinitions.add(LanguageFunction.pushR);
-        functionDefinitions.add(LanguageFunction.undo);
-        current.addLast(LanguageFunction.main);
+        functionDefinitions.add(main);
+        functionDefinitions.add(printInt);
+        functionDefinitions.add(square);
+        functionDefinitions.add(forw);
+        functionDefinitions.add(back);
+        functionDefinitions.add(right);
+        functionDefinitions.add(left);
+        functionDefinitions.add(getb);
+        functionDefinitions.add(getr);
+        functionDefinitions.add(getl);
+        functionDefinitions.add(getf);
+        functionDefinitions.add(pushB);
+        functionDefinitions.add(pushF);
+        functionDefinitions.add(pushL);
+        functionDefinitions.add(pushR);
+        functionDefinitions.add(undo);
+        functionDefinitions.add(printBool);
+        current.addLast(main);
     }
 
     /**
