@@ -7,11 +7,14 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'antlr'
+apply plugin: 'application'
 
 jar {
     baseName = 'interpreter'
     version =  '0.1.0'
 }
+
+mainClassName = 'intr.Interpreter'
 
 sourceSets {
     main {
@@ -19,6 +22,12 @@ sourceSets {
             srcDirs 'src/main/java', 'src/main/antlr'
         }
         compileClasspath
+    }
+}
+
+run {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
     }
 }
 
