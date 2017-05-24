@@ -18,9 +18,6 @@ sourceSets {
         java {
             srcDirs 'src/main/java', 'src/main/antlr'
         }
-        antlr {
-            srcDir 'src/main/resources'
-        }
         compileClasspath
     }
 }
@@ -30,12 +27,13 @@ generateGrammarSource {
     arguments += ["-visitor", "-long-messages"]
 }
 
-generateGrammarSource << {
+generateGrammarSource.doLast {
     println "Copying generated grammar lexer/parser files to main directory."
     copy {
-        from "${buildDir}/generated-src/antlr/resources"
+        from "${buildDir}/generated-src/antlr/main"
         into "src/main/antlr/generated"
     }
+    delete "${buildDir}/generated-src"
 }
 
 
